@@ -198,11 +198,11 @@ export default Kapsule({
       .attr('class', 'slice')
       .style('opacity', 0)
       .on('click', d => {
-        d3Event.stopPropagation();
+        // d3Event.stopPropagation();
         (state.onClick || this.focusOnNode)(d.data);
       })
       .on('mouseover', d => {
-        d3Event.stopPropagation();
+        // d3Event.stopPropagation();
         state.onHover && state.onHover(d.data);
         
         state.tooltip.style('display', state.showTooltip(d.data, d) ? 'inline' : 'none');
