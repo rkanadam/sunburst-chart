@@ -47,7 +47,8 @@ export default Kapsule({
       }
     },
     onClick: { triggerUpdate: false },
-    onHover: { triggerUpdate: false }
+    onMouseOver: { triggerUpdate: false },
+    onMouseOut: { triggerUpdate: false }
   },
 
   methods: {
@@ -128,8 +129,6 @@ export default Kapsule({
     // Reset focus by clicking on canvas
     state.svg
       .on('click', () => (state.onClick || this.focusOnNode)(null)) // By default reset zoom when clicking on canvas
-      .on('mouseover', () => state.onHover && state.onHover(null));
-
   },
 
   update: function(state) {
@@ -195,7 +194,7 @@ export default Kapsule({
 
     // Entering
     const newSlice = slice.enter().append('g')
-      .attr('class', 'slice')
+      .attr('class', 'slice node')
       .style('opacity', 0)
       .on('click', d => {
         // d3Event.stopPropagation();
@@ -203,7 +202,7 @@ export default Kapsule({
       })
       .on('mouseover', d => {
         // d3Event.stopPropagation();
-        state.onHover && state.onHover(d.data);
+        state.onMouseOver && state.onMouseOver(d.data, state);
         
         state.tooltip.style('display', state.showTooltip(d.data, d) ? 'inline' : 'none');
         state.tooltip.html(`<div class="tooltip-title">${
@@ -215,7 +214,10 @@ export default Kapsule({
               .join(' &rarr; ')
         }</div>${state.tooltipContent(d.data, d)}`);
       })
-      .on('mouseout', () => { state.tooltip.style('display', 'none'); });
+      .on('mouseout', (d) => {
+        state.onMouseOut && state.onMouseOut(d.data, state);
+        state.tooltip.style('display', 'none');
+      });
 
     newSlice.append('path')
       .attr('class', 'main-arc')
